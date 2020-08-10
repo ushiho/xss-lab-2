@@ -94,7 +94,7 @@ body {
 #level2 #header {
   color: #444;
   font-size: 17px;
-  text-shadow: 1px 1px #ccc;
+  /* text-shadow: 1px 1px #ccc; */
   margin: 10px 0 10px;
 }
 
@@ -164,7 +164,10 @@ body {
   width: 125px;
   border-radius: 5px;
   margin-right: 10px;
-  padding: 0;
+  font-size: 12px;
+  text-align:center;
+  padding-top:4px;
+  text-decoration: none;
 }
 
 #level2 .message-container .clear {

