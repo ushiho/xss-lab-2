@@ -15,14 +15,13 @@ def xss():
     if request.method == 'GET':
         return render_template("index.html", comments=comments)
     else:
-        print("hello")
         content = html_decode(request.form['content'])
         current = datetime.now().strftime('%A %B %d %Y %H:%M:%S')
         comments.append({
             'content': content,
             'saved_at': current
         })
-        print("Records created successfully")
+        # Records created successfully
 
         return redirect('/')
 
@@ -50,7 +49,6 @@ def html_decode(message):
         if char in code:
           char = char.replace(char, code[1])
       decoded += char
-    print("decoded string is", decoded)
     return decoded
 
 if __name__ == "__main__":

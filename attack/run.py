@@ -20,7 +20,6 @@ def submit_form(form):
         form_submit.submit()
 
         final_result = form_submit.response().read().decode()
-        print("finale result is\n", final_result)
         is_vulnerable = bool(final_result.find(PAYLOAD) > 0)
         return is_vulnerable
     else:
